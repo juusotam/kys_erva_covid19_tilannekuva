@@ -1,0 +1,186 @@
+---
+title: "COVID-19 KYS ERVA"
+date: "`r Sys.Date()`"
+output:
+  word_document:
+    reference_docx: reference.docx
+---
+
+```{r setup, include=FALSE, warning = FALSE, echo = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+file.list <- list.files(path = "./data", pattern = "*ajo.csv")
+tbl <- read_csv2(paste0("data/", file.list))
+
+colnames(tbl) <- c("site.id",
+                   "package.id",
+                   "package.name",
+                   "package.status",
+                   "start.date",
+                   "deadline",
+                   "estimated.completion",
+                   "completed",
+                   "work.amount.est",
+                   "work.amount.realization",
+                   "tilannekuva",
+                   "covid19.tehohoito.heraamo",
+                   "covid19.tehohoito.leikkaussali",
+                   "covid19.hengityslaitehoito",
+                   "covid19.tehohoidossa.aikuiset",
+                   "covid19.tehohoidossa.lapset",
+                   "covid19.tehovalvonnassa",
+                   "covid19.vuodeosastolla",
+                   "covid19.erityshuoneessa",
+                   "kapasiteetin.lasku.kons",
+                   "kapasiteetin.lasku.oper",
+                   "potilaita.teholle.covid19",
+                   "potilaita.teholle.non.covid19",
+                   "covid19.kuolleet",
+                   "puutteet.muut.tarvikkeet",
+                   "puutteet.muut.laakkeet",
+                   "muut.huomiot",
+                   "toiminnalliset.muutokset",
+                   "pvm",
+                   "covid19.kotiutuneet.cum",
+                   "sairaansijat",
+                   "sijaisia.saatavilla",
+                   "tehohoitopaikat.yhteensa",
+                   "uudet.positiiviset.covid19.testit",
+                   "vaje.antibiooteista",
+                   "vaje.hengityslaitteista",
+                   "vaje.kipulaakkeista",
+                   "vaje.kasidesista",
+                   "vaje.hapesta",
+                   "vaje.maskeista",
+                   "vaje.muut.kriittiset.laakkeet",
+                   "vaje.muut.kriittiset.tarvikkeet",
+                   "vaje.sedatiivat",
+                   "vaje.suojakasineet",
+                   "vaje.suojavarusteet",
+                   "vaje.verenkierrontuki",
+                   "vaje.verituotteet",
+                   "vaje.hoitohenkilokunta",
+                   "vaje.infuusioliuokset",
+                   "vaje.laakarit",
+                   "vaje.muu.henkilokunta",
+                   "lisatiedot")
+
+tbl <- tbl %>% 
+  mutate(pvm = as.Date(pvm, format = "%d.%m.%Y")) %>% 
+  mutate(site.id = case_when(site.id == "4531569" ~ "KYS",
+                             site.id == "4531565" ~ "SiunSote",
+                             site.id == "4531567" ~ "Sosteri",
+                             site.id == "4531583" ~ "ESSOTE",
+                             site.id == "4531577" ~ "KSSHP",
+                             TRUE ~ site.id)) %>% 
+  select(pvm, site.id, sairaansijat, tehohoitopaikat.yhteensa, covid19.kotiutuneet.cum,
+         uudet.positiiviset.covid19.testit, covid19.kuolleet, potilaita.teholle.covid19,
+         potilaita.teholle.non.covid19, covid19.erityshuoneessa, covid19.vuodeosastolla,
+         covid19.tehohoidossa.aikuiset, covid19.tehohoidossa.lapset, covid19.tehovalvonnassa,
+         covid19.hengityslaitehoito, covid19.tehohoito.heraamo, covid19.tehohoito.leikkaussali,
+         vaje.laakarit, vaje.hoitohenkilokunta, vaje.muu.henkilokunta, sijaisia.saatavilla,
+         vaje.suojavarusteet, vaje.suojakasineet, vaje.kasidesista, vaje.hengityslaitteista,
+         vaje.muut.kriittiset.tarvikkeet, puutteet.muut.tarvikkeet,
+         vaje.infuusioliuokset, vaje.verituotteet, vaje.hapesta, vaje.kipulaakkeista,
+         vaje.sedatiivat, vaje.verenkierrontuki,vaje.antibiooteista, vaje.muut.kriittiset.laakkeet,
+         puutteet.muut.laakkeet, kapasiteetin.lasku.oper, kapasiteetin.lasku.kons, toiminnalliset.muutokset,
+         muut.huomiot) %>% 
+  filter(!is.na(pvm)) %>% 
+  mutate(vaje.laakarit = ifelse(vaje.laakarit == 1, "Kyllä", "Ei"),
+         vaje.hoitohenkilokunta = ifelse(vaje.hoitohenkilokunta == 1, "Kyllä", "Ei"),
+         vaje.muu.henkilokunta = ifelse(vaje.muu.henkilokunta == 1, "Kyllä", "Ei"),
+         sijaisia.saatavilla = ifelse(sijaisia.saatavilla == 1, "Kyllä", "Ei"),
+         vaje.suojavarusteet = ifelse(vaje.suojavarusteet == 1, "Kyllä", "Ei"),
+         vaje.suojakasineet = ifelse(vaje.suojakasineet == 1, "Kyllä", "Ei"),
+         vaje.kasidesista = ifelse(vaje.kasidesista == 1, "Kyllä", "Ei"),
+         vaje.hengityslaitteista = ifelse(vaje.hengityslaitteista == 1, "Kyllä", "Ei"),
+         vaje.muut.kriittiset.tarvikkeet = ifelse(vaje.muut.kriittiset.tarvikkeet == 1, "Kyllä", "Ei"),
+         vaje.infuusioliuokset = ifelse(vaje.infuusioliuokset == 1, "Kyllä", "Ei"),
+         vaje.verituotteet = ifelse(vaje.verituotteet == 1, "Kyllä", "Ei"),
+         vaje.hapesta = ifelse(vaje.hapesta == 1, "Kyllä", "Ei"),
+         vaje.kipulaakkeista = ifelse(vaje.kipulaakkeista == 1, "Kyllä", "Ei"),
+         vaje.sedatiivat = ifelse(vaje.sedatiivat == 1, "Kyllä", "Ei"),
+         vaje.verenkierrontuki = ifelse(vaje.verenkierrontuki == 1, "Kyllä", "Ei"),
+         vaje.antibiooteista = ifelse(vaje.antibiooteista == 1, "Kyllä", "Ei"),
+         vaje.muut.kriittiset.laakkeet = ifelse(vaje.muut.kriittiset.laakkeet == 1, "Kyllä", "Ei"),
+         puutteet.muut.laakkeet = ifelse(!is.na(puutteet.muut.laakkeet), puutteet.muut.laakkeet, ""),
+         puutteet.muut.tarvikkeet = ifelse(!is.na(puutteet.muut.tarvikkeet), puutteet.muut.tarvikkeet, ""))
+
+d <- tbl %>% 
+  select(-muut.huomiot, -toiminnalliset.muutokset, -pvm) %>% 
+  t()
+colnames(d) <- as.character(d[1,])
+d <- data.frame(d) %>% 
+  select(ESSOTE, KSSHP, KYS, SiunSote, Sosteri)
+rownames(d) <- c("Sairaanhoitopiiri",
+                 "Sairaansijat",
+                 "Tehohoitopaikat",
+                 "Kotiutuneet COVID-19 potilaat (kumulatiivinen)",
+                 "Uudet positiiviset COVID-19 testit",
+                 "Kuolleet COVID-19 potilaat",
+                 "Kuinka monta COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
+                 "Kuinka monta EI COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
+                 "COVID-19 potilaita eristyshuoneissa",
+                 "COVID-19 potilaita vuodeosastolla",
+                 "COVID-19 potilaita tehohoidossa (aikuiset)",
+                 "COVID-19 potilaita tehohoidossa (lapset)",
+                 "COVID-19 potilaita tehovalvonnassa",
+                 "COVID-19 potilaita hengityslaitehoidossa",
+                 "COVID-19 potilaita heräämössä tehohoidossa",
+                 "COVID-19 potilaita leikkaussalissa tehohoidossa",
+                 "Vajetta lääkäreistä",
+                 "Vajetta hoitajista",
+                 "Vajetta muusta henkilökunnasta",
+                 "Sijaisia saatavilla",
+                 "Vaje suojavarusteista",
+                 "Vaje suojakäsineistä",
+                 "Vaje käsidesistä",
+                 "Vaje hengityslaitteista",
+                 "Vaje muista kriittisistä tarvikkeista",
+                 "Mistä kriittisistä tarvikkeista",
+                 "Vaje infuusioliuoksista",
+                 "Vaje verituotteista",
+                 "Vaje lääkinnällisestä hapesta",
+                 "Vaje kipulääkkeistä",
+                 "Vaje sedatiivoista",
+                 "Vaje verenkierron tukilääkkeistä",
+                 "Vaje antibiooteista",
+                 "Vaje muista kriittisistä lääkkeistä",
+                 "Mistä kriittisistä lääkkeistä",
+                 "Kapasiteetin lasku operatiivislla aloilla",
+                 "Kapasiteetin lasku konservatiivisilla aloilla"
+                 )
+
+
+```
+
+`NA` tarkoittaa, että tietoa ei ole syötetty lomakkeelle.
+
+```{r echo = FALSE}
+knitr::kable(d[-1, ])
+```
+
+```{=openxml}
+<w:p><w:r><w:br w:type="page"/></w:r></w:p>
+```
+
+
+## Toiminnalliset muutokset
+
+```{r echo = FALSE}
+e <- tbl %>%
+  select(site.id, toiminnalliset.muutokset)
+colnames(e) <- c("SHP", "Huomio")
+knitr::kable(e)
+```
+
+## Muut huomiot
+
+```{r echo = FALSE}
+f <- tbl %>% 
+  select(site.id, muut.huomiot)
+colnames(f) <- c("SHP", "Huomio")
+knitr::kable(f)
+```
+

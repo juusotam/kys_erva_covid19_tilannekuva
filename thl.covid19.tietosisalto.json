@@ -1,0 +1,257 @@
+{
+  "$schema": "schema.url",
+  "$id": "schema.url",
+  "title": "COVID-19 KYS ERVA tilannekuvan tietosisältö",
+  "properties": {
+    "site.id": {
+      "name": "site_id",
+      "description": "Sairaalan / sairaanhoitopiirin tunnistenumero",
+      "type": "integer"
+    },
+    "package.id": {
+      "name": "package_id",
+      "description": "Työpaketin tunnistenumero",
+      "type": "integer"
+    },
+    "package.name": {
+      "name": "Package name",
+      "description": "Työpaketi nimi",
+      "type": "character"
+    },
+    "start.date": {
+      "name": "Start date",
+      "description": "Työpaketin täyttämisen aloittamispäivä",
+      "type": "character"
+    },
+    "deadline": {
+      "name": "Deadline",
+      "description": "Viimeinen valmistumispäivä",
+      "type": "character"
+    },
+    "estimated.completion": {
+      "name": "Estimated Completion",
+      "description": "Arvioitu valmistumisaika",
+      "type": "character"
+    },
+    "completed": {
+      "name": "Completed",
+      "description": "Tilatieto valmistumisesta",
+      "type": "character"
+    },
+    "work.amount.est": {
+      "name": "Work amount estimate",
+      "description": "Arvioitu työmäärä",
+      "type": "character"
+    },
+    "work.amount.realization": {
+      "name": "Work amount realization",
+      "description": "Toteutunut työmäärä",
+      "type": "character"
+    },
+    "tilannekuva": {
+      "name": "Tilannekuva",
+      "description": "Otsikko",
+      "type": "character"
+    },
+    "covid19.tehohoito.heraamo": {
+      "name": "Tilannekuva|COVID-19 heräämöpaikoilla tehohoitoa vaativia potilaita",
+      "description": "",
+      "type": "integer"
+    },
+    "covid19.tehohoito.leikkaussali": {
+      "name": "Tilannekuva|COVID-19 leikkaussaleissa tehohoitoa vaativia potilaita",
+      "description": "",
+      "type": "integer"
+    },
+    "covid19.hengityslaitehoito": {
+      "name": "Tilannekuva|COVID-19 poitilaita invasiivisessa hengityslaitehoidossa",
+      "description": "",
+      "type": "integer"
+    },
+    "covid19.tehohoidossa.aikuiset": {
+      "name": "Tilannekuva|COVID-19 potilaat teho-osastopaikoilla (aikuiset)",
+      "description": "",
+      "type": "integer"
+    },
+    "covid19.tehohoidossa.lapset": {
+      "name": "Tilannekuva|COVID-19 potilaat teho-osastopaikoilla (lapset)",
+      "description": "",
+      "type": "integer"
+    },
+    "covid19.tehovalvonnassa": {
+      "name": "Tilannekuva|COVID-19 potilaat tehovalvontapaikoilla",
+      "description": "", 
+      "type": "integer"
+    },
+    "covid19.vuodeosastolla": {
+      "name": "Tilannekuva|COVID-19 potilaat vuodeosastopaikoilla",
+      "description": "", 
+      "type": "integer"       
+    },
+    "covid19.erityshuoneessa": {
+      "name": "Tilannekuva|Eristyshuoneissa hoidossa olevat COVID-19 potilaat",
+      "description": "", 
+      "type": "integer"       
+    },
+    "kapasiteetin.lasku.oper": {
+      "name": "Tilannekuva|Kapasiteetin vähennys operatiivisilla erikoisaloilla",
+      "description": "", 
+      "type": "integer"       
+    },
+    "kapasiteetin.lasku.kons": {
+      "name": "Tilannekuva|Kapasiteetin vähennys konservatiivisilla erikoisaloilla",
+      "description": "", 
+      "type": "integer"       
+    },
+    "potilaita.teholle.covid19": {
+      "name": "Tilannekuva|Kuinka monta COVID-19 potilaista voitaisiin ottaa teholle nyt?",
+      "description": "", 
+      "type": "integer"       
+    },
+    "potilaita.teholle.non.covid19": {
+      "name": "Tilannekuva|Kuinka monta EI COVID-19 potilasta voitaisiin ottaa teholle nyt?",
+      "description": "", 
+      "type": "integer"       
+    },
+    "covid19.kuolleet": {
+      "name": "Tilannekuva|Kuolleet COVID-19 potilaat edellisen vuorokauden aikana",
+      "description": "", 
+      "type": "integer"       
+    },
+    "puutteet.muut.tarvikkeet": {
+      "name": "Tilannekuva|Kuvaus muiden tarvikkeiden puutteista",
+      "description": "", 
+      "type": "character"       
+    },
+    "puutteet.muut.laakkeet": {
+      "name": "Tilannekuva|Mistä kriittisistä lääkkeistä",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "muut.huomiot": {
+      "name": "Tilannekuva|Muut huomiot",
+      "description": "", 
+      "type": "character"       
+    },
+    "toiminnalliset.muutokset": {
+      "name": "Tilannekuva|Oleelliset toiminnalliset muutokset",
+      "description": "", 
+      "type": "character"       
+    },
+    "pvm": {
+      "name": "Tilannekuva|Raportin päivämäärä",
+      "description": "", 
+      "type": "date"       
+    },
+    "covid19.kotiutuneet.cum": {
+      "name": "Tilannekuva|Sairaalahoidosta kotiutuneet COVID-19 potilaat pandemian aikana",
+      "description": "", 
+      "type": "integer"       
+    },
+    "sairaansijat": {
+      "name": "Tilannekuva|Sairaansijat yhteensä",
+      "description": "", 
+      "type": "integer"       
+    },
+    "sijaisia.saatavilla": {
+      "name": "Tilannekuva|Sijaisia saatavilla riittävästi",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "tehohoitopaikat.yhteensa": {
+      "name": "Tilannekuva|Tehohoitopaikat yhteensä",
+      "description": "", 
+      "type": "integer"       
+    },
+    "uudet.positiiviset.covid19.testit": {
+      "name": "Tilannekuva|Uudet positiiviset COVID-19 testit edellisen vuorokauden aikana",
+      "description": "", 
+      "type": "integer"        
+    },
+    "vaje.antibiooteista": {
+      "name": "Tilannekuva|Vaje antibiooteista",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.hengityslaitteista": {
+      "name": "Tilannekuva|Vaje hengityslaitteista",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.kipulaakkeista": {
+      "name": "Tilannekuva|Vaje kipulääkkeistä",
+      "description": "", 
+      "type": "boolean"       
+    }, 
+    "vaje.kasidesista": {
+      "name": "Tilannekuva|Vaje käsidesistä",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.hapesta": {
+      "name": "Tilannekuva|Vaje lääkinnällisestä hapesta",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.maskeista": {
+      "name": "Tilannekuva|Vaje maskeista",
+      "description": "", 
+      "type": "boolean"      
+    },
+    "vaje.muut.kriittiset.laakkeet": {
+      "name": "Tilannekuva|Vaje muista kriittisistä lääkkeistä",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.muut.kriittiset.tarvikkeet" : {
+      "name": "Tilannekuva|Vaje muista kriittisistä tarvikkeista",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.sedatiivat": {
+      "name": "Tilannekuva|Vaje sedatiivoista",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.suojakasineet": {
+      "name": "Tilannekuva|Vaje suojakäsineistä",
+      "description": "", 
+      "type": "boolean"       
+    },
+    "vaje.suojavarusteet": {
+      "name": "Tilannekuva|Vaje suojavarusteet ml. visiirit",
+      "description": "", 
+      "type": "boolean"      
+    },
+    "vaje.verenkierrontuki": {
+      "name": "Tilannekuva|Vaje verenkierron tukilääkkeistä",
+      "description": "",
+      "type": "boolean"       
+    },
+    "vaje.verituotteet": {
+      "name": "Tilannekuva|Vaje verituotteista",
+      "description": "",
+      "type": "boolean"       
+    },
+    "vaje.hoitohenkilokunta": {
+      "name": "Tilannekuva|Vajetta hoitohenkilökunnasta",
+      "description": "",
+      "type": "boolean"       
+    },
+    "vaje.infuusioliuokset": {
+      "name": "Tilannekuva|Vajetta infuusioliuoksista",
+      "description": "",
+      "type": "boolean"       
+    },
+    "vaje.laakarit": {
+      "name": "Tilannekuva|Vajetta lääkärihenkilökunnasta",
+      "description": "",
+      "type": "boolean"       
+    },
+    "vaje.muu.henkilokunta": {
+      "name": "Tilannekuva|Vajetta muista henkilöstöryhmistä",
+      "description": "",
+      "type": "boolean"      
+    }
+  }
+}
