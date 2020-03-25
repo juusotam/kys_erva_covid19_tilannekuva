@@ -1,0 +1,427 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_0ncbcrr" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="3.5.0">
+  <bpmn:collaboration id="KYS_erva_COVID19_tilannekuva">
+    <bpmn:participant id="Participant_0ty2c08" name="KYS" processRef="Process_138oz8l" />
+    <bpmn:participant id="Participant_1k17qer" name="JYL" processRef="Process_0k9futt" />
+    <bpmn:participant id="Participant_0nf14i2" name="Keskussairaala" processRef="Process_0cr2pkm" />
+    <bpmn:participant id="Participant_0hq01fq" name="KYS SOTE johtokeskus" processRef="Process_0rqbl51" />
+    <bpmn:messageFlow id="MessageFlow_0n6ku2p" sourceRef="sendSecAppMessage" targetRef="StartEvent_0g6zx28" />
+    <bpmn:messageFlow id="MessageFlow_1g2w65a" sourceRef="Task_0mmola8" targetRef="StartEvent_16cp4cv" />
+    <bpmn:messageFlow id="MessageFlow_0usnayd" sourceRef="Task_0e4luz0" targetRef="IntermediateThrowEvent_0ltmk0y" />
+    <bpmn:messageFlow id="MessageFlow_0xx1lzm" sourceRef="Task_08qek4e" targetRef="IntermediateThrowEvent_1o6753f" />
+    <bpmn:messageFlow id="MessageFlow_1u8vest" sourceRef="sendSecAppMessage" targetRef="StartEvent_1v03a31" />
+    <bpmn:messageFlow id="MessageFlow_0w7an5i" sourceRef="Task_15hfq6p" targetRef="IntermediateThrowEvent_0ltmk0y" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_138oz8l" isExecutable="true">
+    <bpmn:laneSet id="LaneSet_0u99nsq">
+      <bpmn:lane id="Lane_0odpgqh" name="Sairaalan johtaja">
+        <bpmn:flowNodeRef>StartEvent_1v03a31</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_1399fkd</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_15hfq6p</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>Task_0t7l939</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1v03a31" name="Vastaanottaa SecApp viestin klo 08:00">
+      <bpmn:outgoing>SequenceFlow_1p2lzl2</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="EndEvent_1399fkd" name="08:45">
+      <bpmn:incoming>SequenceFlow_1qd90y0</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Task_15hfq6p" name="Sairaalan tilannekuva täytetään SecApp:iin">
+      <bpmn:incoming>SequenceFlow_0657hos</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qd90y0</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_0t7l939" name="Sairaalan johtaja muodostaa sairaalan tilannekuvan">
+      <bpmn:incoming>SequenceFlow_1p2lzl2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0657hos</bpmn:outgoing>
+      <bpmn:property id="Property_041pcj5" name="__targetRef_placeholder" />
+      <bpmn:dataInputAssociation id="DataInputAssociation_1xypoyu">
+        <bpmn:sourceRef>DataStoreReference_0b717w8</bpmn:sourceRef>
+        <bpmn:targetRef>Property_041pcj5</bpmn:targetRef>
+      </bpmn:dataInputAssociation>
+    </bpmn:task>
+    <bpmn:dataStoreReference id="DataStoreReference_0b717w8" name="Sairaalan tilannekuvasovellus" />
+    <bpmn:sequenceFlow id="SequenceFlow_0657hos" sourceRef="Task_0t7l939" targetRef="Task_15hfq6p" />
+    <bpmn:sequenceFlow id="SequenceFlow_1qd90y0" sourceRef="Task_15hfq6p" targetRef="EndEvent_1399fkd" />
+    <bpmn:sequenceFlow id="SequenceFlow_1p2lzl2" sourceRef="StartEvent_1v03a31" targetRef="Task_0t7l939" />
+    <bpmn:textAnnotation id="TextAnnotation_0r7j396">
+      <bpmn:text>Klo 08:30 tilannekuvakokous</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_1ttnsg6" sourceRef="Task_0t7l939" targetRef="TextAnnotation_0r7j396" />
+  </bpmn:process>
+  <bpmn:process id="Process_0k9futt" isExecutable="false">
+    <bpmn:parallelGateway id="ExclusiveGateway_19inepl">
+      <bpmn:incoming>SequenceFlow_1qims8g</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_02qx4wd</bpmn:outgoing>
+      <bpmn:outgoing>SequenceFlow_0yoquz4</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:startEvent id="StartEvent_16cp4cv" name="SecApp tilannekuva on koostettu klo 08:50">
+      <bpmn:outgoing>SequenceFlow_1qims8g</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_0lltdbv" />
+    </bpmn:startEvent>
+    <bpmn:parallelGateway id="ExclusiveGateway_0czjald">
+      <bpmn:incoming>SequenceFlow_12569d4</bpmn:incoming>
+      <bpmn:incoming>SequenceFlow_19hgu2f</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0n919s2</bpmn:outgoing>
+    </bpmn:parallelGateway>
+    <bpmn:endEvent id="EndEvent_0zxnmsa" name="09:00">
+      <bpmn:incoming>SequenceFlow_0n919s2</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:task id="Task_08qek4e" name="Hyväksyy ERVA tilannekuvan lähettämisen STM">
+      <bpmn:incoming>SequenceFlow_0yoquz4</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_19hgu2f</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_0ahisrp" name="Päättää jatkotoimista tilannekuvan perusteella">
+      <bpmn:incoming>SequenceFlow_02qx4wd</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_12569d4</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_1qims8g" sourceRef="StartEvent_16cp4cv" targetRef="ExclusiveGateway_19inepl" />
+    <bpmn:sequenceFlow id="SequenceFlow_02qx4wd" sourceRef="ExclusiveGateway_19inepl" targetRef="Task_0ahisrp" />
+    <bpmn:sequenceFlow id="SequenceFlow_0yoquz4" sourceRef="ExclusiveGateway_19inepl" targetRef="Task_08qek4e" />
+    <bpmn:sequenceFlow id="SequenceFlow_12569d4" sourceRef="Task_0ahisrp" targetRef="ExclusiveGateway_0czjald" />
+    <bpmn:sequenceFlow id="SequenceFlow_0n919s2" sourceRef="ExclusiveGateway_0czjald" targetRef="EndEvent_0zxnmsa" />
+    <bpmn:sequenceFlow id="SequenceFlow_19hgu2f" sourceRef="Task_08qek4e" targetRef="ExclusiveGateway_0czjald" />
+  </bpmn:process>
+  <bpmn:process id="Process_0cr2pkm" isExecutable="false">
+    <bpmn:startEvent id="StartEvent_0g6zx28" name="Vastaanottaa SecApp viestin klo 08:00">
+      <bpmn:outgoing>SequenceFlow_0avqym2</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1kj79a9" />
+    </bpmn:startEvent>
+    <bpmn:task id="Task_0e4luz0" name="Täyttää raportin">
+      <bpmn:incoming>SequenceFlow_0avqym2</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1qk6hl8</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_1pop29i" name="08:45">
+      <bpmn:incoming>SequenceFlow_1qk6hl8</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0avqym2" sourceRef="StartEvent_0g6zx28" targetRef="Task_0e4luz0" />
+    <bpmn:sequenceFlow id="SequenceFlow_1qk6hl8" sourceRef="Task_0e4luz0" targetRef="EndEvent_1pop29i" />
+    <bpmn:textAnnotation id="TextAnnotation_0on3bit">
+      <bpmn:text>Keskussairaalalla oma toimintamalli sairaalan tilannekuvan koostamiseen</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_0cc681g" sourceRef="Task_0e4luz0" targetRef="TextAnnotation_0on3bit" />
+  </bpmn:process>
+  <bpmn:process id="Process_0rqbl51" isExecutable="false">
+    <bpmn:task id="sendSecAppMessage" name="Lähettää SecApp viestin sairaaloihin">
+      <bpmn:incoming>SequenceFlow_0zc518x</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0atz2ce</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Task_0uiitgn" name="Koostaa ERVA tilannekuvan">
+      <bpmn:incoming>SequenceFlow_09dkylj</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_00vfu6z</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_0ltmk0y" name="Odottaa vastaukset (pitäisi olla valmis 08:45)">
+      <bpmn:incoming>SequenceFlow_0atz2ce</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_09dkylj</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1xvofh3" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:startEvent id="StartEvent_15tbf2d" name="Klo 08:00 - Arkisin (viikonloput selvitettävä?)">
+      <bpmn:outgoing>SequenceFlow_0zc518x</bpmn:outgoing>
+      <bpmn:timerEventDefinition id="TimerEventDefinition_1236rkd" />
+    </bpmn:startEvent>
+    <bpmn:task id="Task_0mmola8" name="Lähettää ERVA tilannekuvan JYL">
+      <bpmn:incoming>SequenceFlow_00vfu6z</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0dp55yg</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:intermediateCatchEvent id="IntermediateThrowEvent_1o6753f" name="Odottaa JYL hyväksynnän">
+      <bpmn:incoming>SequenceFlow_0dp55yg</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_0ta2ou6</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1koqqu2" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:task id="Task_1yrxgme" name="Lähettää ERVA tilannekuvan STM">
+      <bpmn:incoming>SequenceFlow_0ta2ou6</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1et170s</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:endEvent id="EndEvent_1s2i4jv" name="09:00 - 12:00">
+      <bpmn:incoming>SequenceFlow_1et170s</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_0zc518x" sourceRef="StartEvent_15tbf2d" targetRef="sendSecAppMessage" />
+    <bpmn:sequenceFlow id="SequenceFlow_0atz2ce" sourceRef="sendSecAppMessage" targetRef="IntermediateThrowEvent_0ltmk0y" />
+    <bpmn:sequenceFlow id="SequenceFlow_09dkylj" sourceRef="IntermediateThrowEvent_0ltmk0y" targetRef="Task_0uiitgn" />
+    <bpmn:sequenceFlow id="SequenceFlow_00vfu6z" sourceRef="Task_0uiitgn" targetRef="Task_0mmola8" />
+    <bpmn:sequenceFlow id="SequenceFlow_0dp55yg" sourceRef="Task_0mmola8" targetRef="IntermediateThrowEvent_1o6753f" />
+    <bpmn:sequenceFlow id="SequenceFlow_1et170s" sourceRef="Task_1yrxgme" targetRef="EndEvent_1s2i4jv" />
+    <bpmn:sequenceFlow id="SequenceFlow_0ta2ou6" sourceRef="IntermediateThrowEvent_1o6753f" targetRef="Task_1yrxgme" />
+    <bpmn:textAnnotation id="TextAnnotation_10zbffb">
+      <bpmn:text>Valmiit viestipohjat  ja kohteet</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_0iwo6c1">
+      <bpmn:text>Suojattu sähköposti
+THL / STM / ISAVI / ERVA keskussairaalat</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_0sxtxnc">
+      <bpmn:text>SecApp ohjelmistosta / CSV-tiedosto + scripti</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:textAnnotation id="TextAnnotation_09tya70">
+      <bpmn:text>Suojattu sähköposti</bpmn:text>
+    </bpmn:textAnnotation>
+    <bpmn:association id="Association_10j8xtd" sourceRef="sendSecAppMessage" targetRef="TextAnnotation_10zbffb" />
+    <bpmn:association id="Association_0janolt" sourceRef="Task_1yrxgme" targetRef="TextAnnotation_0iwo6c1" />
+    <bpmn:association id="Association_0yeazlc" sourceRef="Task_0uiitgn" targetRef="TextAnnotation_0sxtxnc" />
+    <bpmn:association id="Association_1gzl6b8" sourceRef="Task_0mmola8" targetRef="TextAnnotation_09tya70" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="KYS_erva_COVID19_tilannekuva">
+      <bpmndi:BPMNShape id="Participant_0ty2c08_di" bpmnElement="Participant_0ty2c08" isHorizontal="true">
+        <dc:Bounds x="160" y="720" width="810" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0t7l939_di" bpmnElement="Task_0t7l939">
+        <dc:Bounds x="480" y="750" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_15hfq6p_di" bpmnElement="Task_15hfq6p">
+        <dc:Bounds x="660" y="750" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1399fkd_di" bpmnElement="EndEvent_1399fkd">
+        <dc:Bounds x="882" y="772" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="886" y="815" width="28" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0657hos_di" bpmnElement="SequenceFlow_0657hos">
+        <di:waypoint x="580" y="790" />
+        <di:waypoint x="660" y="790" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qd90y0_di" bpmnElement="SequenceFlow_1qd90y0">
+        <di:waypoint x="760" y="790" />
+        <di:waypoint x="882" y="790" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Participant_1k17qer_di" bpmnElement="Participant_1k17qer" isHorizontal="true">
+        <dc:Bounds x="1000" y="720" width="560" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0zxnmsa_di" bpmnElement="EndEvent_0zxnmsa">
+        <dc:Bounds x="1482" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1486" y="825" width="28" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qims8g_di" bpmnElement="SequenceFlow_1qims8g">
+        <di:waypoint x="1168" y="800" />
+        <di:waypoint x="1195" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ParallelGateway_1x5r17w_di" bpmnElement="ExclusiveGateway_19inepl">
+        <dc:Bounds x="1195" y="775" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0ahisrp_di" bpmnElement="Task_0ahisrp">
+        <dc:Bounds x="1280" y="880" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_02qx4wd_di" bpmnElement="SequenceFlow_02qx4wd">
+        <di:waypoint x="1220" y="825" />
+        <di:waypoint x="1220" y="920" />
+        <di:waypoint x="1280" y="920" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_08qek4e_di" bpmnElement="Task_08qek4e">
+        <dc:Bounds x="1280" y="760" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0yoquz4_di" bpmnElement="SequenceFlow_0yoquz4">
+        <di:waypoint x="1245" y="800" />
+        <di:waypoint x="1280" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_12569d4_di" bpmnElement="SequenceFlow_12569d4">
+        <di:waypoint x="1380" y="920" />
+        <di:waypoint x="1430" y="920" />
+        <di:waypoint x="1430" y="825" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0n919s2_di" bpmnElement="SequenceFlow_0n919s2">
+        <di:waypoint x="1455" y="800" />
+        <di:waypoint x="1482" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_19hgu2f_di" bpmnElement="SequenceFlow_19hgu2f">
+        <di:waypoint x="1380" y="800" />
+        <di:waypoint x="1405" y="800" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_0xedtxz_di" bpmnElement="StartEvent_16cp4cv">
+        <dc:Bounds x="1132" y="782" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1051" y="780" width="71" height="53" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0nf14i2_di" bpmnElement="Participant_0nf14i2" isHorizontal="true">
+        <dc:Bounds x="400" y="80" width="580" height="240" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_0e4luz0_di" bpmnElement="Task_0e4luz0">
+        <dc:Bounds x="630" y="190" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0avqym2_di" bpmnElement="SequenceFlow_0avqym2">
+        <di:waypoint x="508" y="230" />
+        <di:waypoint x="630" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="EndEvent_1pop29i_di" bpmnElement="EndEvent_1pop29i">
+        <dc:Bounds x="902" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="906" y="255" width="28" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1qk6hl8_di" bpmnElement="SequenceFlow_1qk6hl8">
+        <di:waypoint x="730" y="230" />
+        <di:waypoint x="902" y="230" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ParallelGateway_11so2gg_di" bpmnElement="ExclusiveGateway_0czjald">
+        <dc:Bounds x="1405" y="775" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_0hq01fq_di" bpmnElement="Participant_0hq01fq" isHorizontal="true">
+        <dc:Bounds x="160" y="370" width="1450" height="300" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1koo690_di" bpmnElement="sendSecAppMessage">
+        <dc:Bounds x="440" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0zc518x_di" bpmnElement="SequenceFlow_0zc518x">
+        <di:waypoint x="348" y="560" />
+        <di:waypoint x="440" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0n6ku2p_di" bpmnElement="MessageFlow_0n6ku2p">
+        <di:waypoint x="490" y="520" />
+        <di:waypoint x="490" y="248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="StartEvent_1lq54ui_di" bpmnElement="StartEvent_0g6zx28">
+        <dc:Bounds x="472" y="212" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="453" y="162" width="73" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_0a48fzh_di" bpmnElement="StartEvent_15tbf2d">
+        <dc:Bounds x="312" y="542" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="289" y="585" width="84" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0atz2ce_di" bpmnElement="SequenceFlow_0atz2ce">
+        <di:waypoint x="540" y="560" />
+        <di:waypoint x="652" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_0uiitgn_di" bpmnElement="Task_0uiitgn">
+        <dc:Bounds x="800" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_09dkylj_di" bpmnElement="SequenceFlow_09dkylj">
+        <di:waypoint x="688" y="560" />
+        <di:waypoint x="800" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_0mmola8_di" bpmnElement="Task_0mmola8">
+        <dc:Bounds x="1100" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_00vfu6z_di" bpmnElement="SequenceFlow_00vfu6z">
+        <di:waypoint x="900" y="560" />
+        <di:waypoint x="1100" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0dp55yg_di" bpmnElement="SequenceFlow_0dp55yg">
+        <di:waypoint x="1200" y="560" />
+        <di:waypoint x="1292" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_1yrxgme_di" bpmnElement="Task_1yrxgme">
+        <dc:Bounds x="1390" y="520" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_1s2i4jv_di" bpmnElement="EndEvent_1s2i4jv">
+        <dc:Bounds x="1532" y="542" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1518" y="585" width="65" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1g2w65a_di" bpmnElement="MessageFlow_1g2w65a">
+        <di:waypoint x="1150" y="600" />
+        <di:waypoint x="1150" y="782" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0yam46o_di" bpmnElement="IntermediateThrowEvent_1o6753f">
+        <dc:Bounds x="1292" y="542" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1277" y="505" width="65" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="IntermediateCatchEvent_0a4wuwm_di" bpmnElement="IntermediateThrowEvent_0ltmk0y">
+        <dc:Bounds x="652" y="542" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="686" y="490" width="88" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_0usnayd_di" bpmnElement="MessageFlow_0usnayd">
+        <di:waypoint x="670" y="270" />
+        <di:waypoint x="670" y="542" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0xx1lzm_di" bpmnElement="MessageFlow_0xx1lzm">
+        <di:waypoint x="1310" y="760" />
+        <di:waypoint x="1310" y="578" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Lane_0odpgqh_di" bpmnElement="Lane_0odpgqh" isHorizontal="true">
+        <dc:Bounds x="190" y="720" width="780" height="260" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="StartEvent_1v03a31_di" bpmnElement="StartEvent_1v03a31">
+        <dc:Bounds x="312" y="772" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="293" y="818" width="73" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="MessageFlow_1u8vest_di" bpmnElement="MessageFlow_1u8vest">
+        <di:waypoint x="490" y="600" />
+        <di:waypoint x="490" y="700" />
+        <di:waypoint x="330" y="700" />
+        <di:waypoint x="330" y="772" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1p2lzl2_di" bpmnElement="SequenceFlow_1p2lzl2">
+        <di:waypoint x="348" y="790" />
+        <di:waypoint x="480" y="790" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="DataStoreReference_0b717w8_di" bpmnElement="DataStoreReference_0b717w8">
+        <dc:Bounds x="385" y="845" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="368" y="905" width="84" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="DataInputAssociation_1xypoyu_di" bpmnElement="DataInputAssociation_1xypoyu">
+        <di:waypoint x="435" y="853" />
+        <di:waypoint x="481" y="823" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0iwo6c1_di" bpmnElement="TextAnnotation_0iwo6c1">
+        <dc:Bounds x="1330" y="415" width="260" height="49" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0janolt_di" bpmnElement="Association_0janolt">
+        <di:waypoint x="1447" y="520" />
+        <di:waypoint x="1456" y="464" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_09tya70_di" bpmnElement="TextAnnotation_09tya70">
+        <dc:Bounds x="1120" y="440" width="100" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1gzl6b8_di" bpmnElement="Association_1gzl6b8">
+        <di:waypoint x="1158" y="520" />
+        <di:waypoint x="1166" y="480" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0sxtxnc_di" bpmnElement="TextAnnotation_0sxtxnc">
+        <dc:Bounds x="775" y="410" width="150" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0yeazlc_di" bpmnElement="Association_0yeazlc">
+        <di:waypoint x="850" y="520" />
+        <di:waypoint x="850" y="450" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_10zbffb_di" bpmnElement="TextAnnotation_10zbffb">
+        <dc:Bounds x="520" y="450" width="130" height="40" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_10j8xtd_di" bpmnElement="Association_10j8xtd">
+        <di:waypoint x="532" y="520" />
+        <di:waypoint x="564" y="490" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0r7j396_di" bpmnElement="TextAnnotation_0r7j396">
+        <dc:Bounds x="530" y="870" width="130" height="54" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_1ttnsg6_di" bpmnElement="Association_1ttnsg6">
+        <di:waypoint x="554" y="830" />
+        <di:waypoint x="579" y="870" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="MessageFlow_0w7an5i_di" bpmnElement="MessageFlow_0w7an5i">
+        <di:waypoint x="670" y="750" />
+        <di:waypoint x="670" y="578" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="TextAnnotation_0on3bit_di" bpmnElement="TextAnnotation_0on3bit">
+        <dc:Bounds x="750" y="100" width="180" height="69" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Association_0cc681g_di" bpmnElement="Association_0cc681g">
+        <di:waypoint x="730" y="201" />
+        <di:waypoint x="782" y="169" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_1et170s_di" bpmnElement="SequenceFlow_1et170s">
+        <di:waypoint x="1490" y="560" />
+        <di:waypoint x="1532" y="560" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0ta2ou6_di" bpmnElement="SequenceFlow_0ta2ou6">
+        <di:waypoint x="1328" y="560" />
+        <di:waypoint x="1390" y="560" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
