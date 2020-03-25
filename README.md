@@ -4,7 +4,7 @@ Tässä on kuvattu koodit ja tietosisällöt KYS:n erityisvastuualueen (ERVA) CO
 
 Tietosisältö sisältää THL:n 20.3.2020 toimittamat muuttujat.
 
-Muuttujakuvaus löytyy dokumentista `thl.covid19.tietosisalto.json`.
+Muuttujakuvaus löytyy dokumentista `thl.covid19.tietosisalto.json`. **Tämä dokumentti sisätää THL:n toimittaman sisällön ja lisäksi KYS ERVA alueen omia tilannekuvakysymyksiä.**
 
 ## Työnkulku
 
