@@ -13,7 +13,7 @@ Muuttujakuvaus löytyy dokumentista `thl.covid19.tietosisalto.json`.
 - Tehdään muuttujien nimeämisiä ja hieman siivoamista
 - Muodostetaan `MS WORD` dokumentti `output` hakemistoon ja nimetään päivämäärän mukaan
 
-Tämän jälkeen raportti voidaan toimittaa eteenpäin turvapostilla sitä tarvitseville.
+Tämän jälkeen raportti voidaan toimittaa eteenpäin turvapostilla sitä tarvitseville. Työnkulku on kuvattu kuvana `doumentation` kansiossa.
 
 ## Dokumentaatio
 
