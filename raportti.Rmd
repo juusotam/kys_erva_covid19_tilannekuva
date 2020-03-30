@@ -10,8 +10,12 @@ output:
 knitr::opts_chunk$set(echo = TRUE)
 library(tidyverse)
 
-file.list <- list.files(path = "./data", pattern = "*ajo.csv")
-tbl <- read_csv2(paste0("data/", file.list))
+#file.list <- list.files(path = "./data", pattern = "*ajo.csv")
+#tbl <- lapply(read_csv2(paste0("data/", file.list)))
+tbl <- list.files(path = "./data", pattern = "*ajo.csv") %>% 
+  paste0("data/", .) %>% 
+  map_df(~read_csv2(.)) %>% 
+  filter(!site_id == "null")
 
 colnames(tbl) <- c("site.id",
                    "package.id",
@@ -83,8 +87,11 @@ tbl <- tbl %>%
          covid19.vuodeosasto,
          covid19.tehohoito.ja.tehovalvonta,
          vaje.laakarit, vaje.hoitohenkilokunta, vaje.muu.henkilokunta,
-         vaje.maskeista, vaje.visiirit, vaje.suojakasineet, vaje.kasidesista,
-         vaje.muut.kriittiset.tarvikkeet, puutteet.muut.tarvikkeet,
+         vaje.suojatakeista, vaje.visiirit,
+         vaje.maskeista, vaje.suojakasineet, vaje.kasidesista,
+         vaje.muut.kriittiset.tarvikkeet, 
+         tietotekniset.hairiot,
+         puutteet.muut.tarvikkeet,
          vaje.infuusioliuokset, vaje.verituotteet, vaje.hapesta, vaje.kipulaakkeista,
          vaje.sedatiivat, vaje.verenkierrontuki,vaje.antibiooteista, vaje.muut.kriittiset.laakkeet,
          puutteet.muut.laakkeet, toiminnalliset.muutokset,
@@ -107,7 +114,10 @@ tbl <- tbl %>%
          vaje.antibiooteista = ifelse(vaje.antibiooteista == 1, "Kyllä", "Ei"),
          vaje.muut.kriittiset.laakkeet = ifelse(vaje.muut.kriittiset.laakkeet == 1, "Kyllä", "Ei"),
          puutteet.muut.laakkeet = ifelse(!is.na(puutteet.muut.laakkeet), puutteet.muut.laakkeet, ""),
-         puutteet.muut.tarvikkeet = ifelse(!is.na(puutteet.muut.tarvikkeet), puutteet.muut.tarvikkeet, ""))
+         puutteet.muut.tarvikkeet = ifelse(!is.na(puutteet.muut.tarvikkeet), puutteet.muut.tarvikkeet, ""),
+         vaje.suojatakeista = ifelse(vaje.suojatakeista == 1, "Kyllä", "Ei"),
+         tietotekniset.hairiot = ifelse(tietotekniset.hairiot == 1, "Kyllä", "Ei")) %>% 
+  filter(pvm == Sys.Date())
 
 d <- tbl %>% 
   select(-muut.huomiot, -toiminnalliset.muutokset, -pvm) %>% 
@@ -131,11 +141,13 @@ rownames(d) <- c("Sairaanhoitopiiri",
                  "Vajetta lääkäreistä",
                  "Vajetta hoitajista",
                  "Vajetta muusta henkilökunnasta",
-                 "Vaje maskeista",
+                 "Vaje suojatakeista",
                  "Vaje visiireistä",
+                 "Vaje maskeista",
                  "Vaje suojakäsineistä",
                  "Vaje käsidesistä",
                  "Vaje muista kriittisistä tarvikkeista",
+                 "Tietotekniikan aiheuttamia toiminnan häiriöitä",
                  "Mistä kriittisistä tarvikkeista",
                  "Vaje infuusioliuoksista",
                  "Vaje verituotteista",
