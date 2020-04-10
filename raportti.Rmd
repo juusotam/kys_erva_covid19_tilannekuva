@@ -123,8 +123,8 @@ d <- tbl %>%
   select(-muut.huomiot, -toiminnalliset.muutokset, -pvm) %>% 
   t()
 colnames(d) <- as.character(d[1,])
-d <- data.frame(d) %>% 
-  select(ESSOTE, KSSHP, KYS, SiunSote, Sosteri)
+d <- data.frame(d) #%>% 
+#  select(ESSOTE, KSSHP, KYS, SiunSote, Sosteri)
 rownames(d) <- c("Sairaanhoitopiiri",
                  "Sairaansijat",
                  "Kaikki potilaat vuodeosastopaikoilla",
