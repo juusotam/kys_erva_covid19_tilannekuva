@@ -1,0 +1,16 @@
+\usepackage{float}
+
+\usepackage{palatino}
+\renewcommand{\familydefault}{\sfdefault} % sans serif
+\fontfamily{ppl}\selectfont
+
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+% center of header
+\fancyhead[LO,LE]{\includegraphics[width=1in,height=1in]{images/KYS_sin_fi_web_png.png}\LARGE\\}
+\fancyhead[RO,RE]{\includegraphics[width=2in,height=2in]{images/kaytto_rajoitettu.png}\LARGE\\}
+% center of footer
+\fancyfoot[CO,CE]{Ainoastaan viranomaiskäyttöön.}
+% page number on the left of even pages and right of odd pages
+\fancyfoot[LE,RO]{\thepage}
+\fancypagestyle{plain}{\pagestyle{fancy}}

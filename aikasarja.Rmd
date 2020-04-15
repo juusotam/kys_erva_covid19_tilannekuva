@@ -1,0 +1,251 @@
+---
+title: "KYS ERVA COVID-19 ESH tilannekuva"
+author: "Kuopion yliopistollinen sairaala"
+date: "`r format(params$date, format = '%d. %B %Y')`"
+output:
+  pdf_document:
+    includes:
+      in_header: "preamble.tex"
+header-includes:
+  - \usepackage{titling}
+  - \setlength{\droptitle}{1.5em} 
+params:
+  date: !r Sys.Date()
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+options(tinytex.verbose = TRUE)
+library(tidyverse)
+library(viridis)
+library(kableExtra)
+load(file = "data/kartta_maakunta_4500k.rda")
+map.kys.erva <- ggplot() +
+  geom_sf(data = maakunnat[maakunnat$nimi %in% c("Pohjois-Savo", "Etelä-Savo", "Keski-Suomi", "Pohjois-Karjala"), ])
+
+source("import.R")
+dat <- tbl %>% 
+  mutate(site.id = factor(site.id),
+         covid19.potilaat.yhteensa = as.numeric(covid19.potilaat.yhteensa),
+         covid19.tehohoito.ja.tehovalvonta = as.numeric(covid19.tehohoito.ja.tehovalvonta))
+
+```
+
+## Johdanto
+
+Tiedot kerätään päivittäin lähetettävällä [**SecApp** viestillä](https://www.secapp.fi) KYS erityisvastuualueen keskussairaaloista. Tiedot kuvastavat kuluvan vuorokauden klo 08:00 tilannetta erikoissairaanhoidossa alueella.
+
+**Muistathan, että STM:n ohjeistuksen mukaisesti nämä tiedot eivät ole julkisia.**
+
+### Lisätietoja tiedonkeruusta
+
+[Juuso Tamminen](mailto:juuso.tamminen@kuh.fi), puh 044 717 2111  
+Kehitämisylilääkäri, Kuopion yliopistollinen sairaala
+
+## Tilannekuva `r format(params$date, format = "%d. %B %Y")`
+
+```{r tilannekuva, echo = F, warning = F}
+d <- tbl %>% 
+  filter(pvm == params$date) %>% 
+  select(-muut.huomiot, -toiminnalliset.muutokset, -pvm) %>% 
+  t()
+colnames(d) <- as.character(d[1,])
+d <- data.frame(d) %>% 
+  select(ESSOTE, KSSHP, KYS, SiunSote, Sosteri)
+rownames(d) <- c("Sairaanhoitopiiri",
+                 "Sairaansijat",
+                 "Kaikki potilaat vuodeosastopaikoilla",
+                 "Tehohoito ja tehovalvonta paikat",
+                 "Kaikki potilaat tehohoito ja tehovalvonta paikoilla",
+                 "Kotiutuneet COVID-19 potilaat",
+                 "Uudet positiiviset COVID-19 testit",
+                 "Kuolleet COVID-19 potilaat",
+                 "Kuinka monta COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
+                 "Kuinka monta EI COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
+                 "Sairaalahoidossa olevat COVID-19 potilaat yhteensä",
+                 "COVID-19 potilaita vuodeosastohoidossa",
+                 "COVID-19 potilaite tehohoidossa ja tehovalvontahoidossa",
+                 "Sairaalan kokonaiskuormitus",
+                 "Teho-osaston kuormitus",
+                 "Vajetta lääkäreistä",
+                 "Vajetta hoitajista",
+                 "Vajetta muusta henkilökunnasta",
+                 "Vaje suojatakeista",
+                 "Vaje visiireistä",
+                 "Vaje maskeista",
+                 "Vaje suojakäsineistä",
+                 "Vaje käsidesistä",
+                 "Vaje muista kriittisistä tarvikkeista",
+                 "Tietotekniikan aiheuttamia toiminnan häiriöitä",
+                 "Mistä kriittisistä tarvikkeista",
+                 "Vaje infuusioliuoksista",
+                 "Vaje verituotteista",
+                 "Vaje lääkinnällisestä hapesta",
+                 "Vaje kipulääkkeistä",
+                 "Vaje sedatiivoista",
+                 "Vaje verenkierron tukilääkkeistä",
+                 "Vaje antibiooteista",
+                 "Vaje muista kriittisistä lääkkeistä",
+                 "Mistä kriittisistä lääkkeistä"
+    )
+```
+
+\renewcommand{\arraystretch}{1.5}
+
+```{r echo = F}
+knitr::kable(d[2:15, ],
+          format = "latex", booktabs = TRUE) %>%
+          kable_styling(latex_options = "scale_down") %>% 
+          row_spec(10, bold = T, color = "white", background = "#D7261E")
+```
+
+## Henkilökunta
+
+```{r henkilokunta, echo = F, warning = F, fig.width=10}
+e <- d
+e$muuttuja <- rownames(e)
+
+table_1 <- e[16:18,] %>% 
+  gather(key = "key", value = "measurement", ESSOTE, KSSHP, KYS, SiunSote, Sosteri) 
+
+table_1_captions <- table_1 %>% 
+  mutate(measurement = ifelse(measurement == 1, "Kyllä", "Ei"))
+
+
+table_1 %>% 
+  ggplot(aes(x = key, y = muuttuja, fill = measurement)) + 
+  geom_tile(aes(fill= measurement), colour = "gray90", size = 1) +
+  scale_fill_manual(values = c("green", "red", "green", "red"), na.value = "white") +
+  geom_text(aes(label = measurement), data = table_1_captions) +
+  theme_minimal()+ 
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        legend.position = "none",
+        axis.text.x = element_text(color = "grey20", size = 12, hjust = .5, vjust = .5, face = "plain"),
+        axis.text.y = element_text(color = "grey20", size = 12, angle = 0, hjust = 1, vjust = 0, face = "plain"),  
+        axis.title.x = element_text(color = "grey20", size = 12, angle = 0, hjust = .5, vjust = 0, face = "plain"),
+        axis.title.y = element_text(color = "grey20", size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain")) +
+  labs(y = NULL,
+       x = NULL)+
+  scale_x_discrete(position = "top")
+```
+
+## Tarvikkeet ja lääkkeet
+
+```{r tarvikkeet, echo = F, warning = F, fig.width = 10}
+e <- d
+e$muuttuja <- rownames(e)
+
+table_1 <- e[c(19:25, 27:34),] %>% 
+  gather(key = "key", value = "measurement", ESSOTE, KSSHP, KYS, SiunSote, Sosteri) 
+
+table_1_captions <- table_1 %>% 
+  mutate(measurement = ifelse(measurement == 1, "Kyllä", "Ei"))
+
+
+table_1 %>% 
+  ggplot(aes(x = key, y = muuttuja, fill = measurement)) + 
+  geom_tile(aes(fill= measurement), colour = "gray90", size = 1) +
+  scale_fill_manual(values = c("green", "red", "green", "red"), na.value = "white") +
+  geom_text(aes(label = measurement), data = table_1_captions) +
+  theme_minimal()+ 
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        legend.position = "none",
+        axis.text.x = element_text(color = "grey20", size = 12, hjust = .5, vjust = .5, face = "plain"),
+        axis.text.y = element_text(color = "grey20", size = 12, angle = 0, hjust = 1, vjust = 0, face = "plain"),  
+        axis.title.x = element_text(color = "grey20", size = 12, angle = 0, hjust = .5, vjust = 0, face = "plain"),
+        axis.title.y = element_text(color = "grey20", size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain")) +
+  labs(y = NULL,
+       x = NULL)+
+  scale_x_discrete(position = "top")
+```
+
+## Puutteet
+
+```{r echo = F, warning = F}
+knitr::kable(d[c(26,35),],
+          format = "latex", booktabs = TRUE) %>%
+          kable_styling(latex_options = "scale_down")
+```
+
+
+## Muut huomiot ja toiminnalliset muutokset
+
+### Essote
+
+**Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$muut.huomiot)`
+
+**Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$toiminnalliset.muutokset)`
+
+### KYS
+
+**Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot)`
+
+**Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$toiminnalliset.muutokset)`
+
+### KSSHP
+
+**Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$muut.huomiot)`
+
+**Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$toiminnalliset.muutokset)`
+
+### SiunSote
+
+**Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot)`
+
+**Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$toiminnalliset.muutokset)`
+
+### Sosteri
+
+**Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot)`
+
+**Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$toiminnalliset.muutokset)`
+
+\newpage
+
+## Aikasarja
+
+Aikasarjaan soveltuvat tiedonkeruu alkoi 27.3.2020. KSSHP:n tiedot puuttuvat yhdeltä päivältä.
+
+### Sairaalahoito
+
+```{r covid19-sairaalassa, echo = F, warning = F, fig.width = 10, fig.height = 5}
+dat %>% 
+    ggplot(aes(x = pvm, y = covid19.potilaat.yhteensa, fill = site.id)) + 
+    geom_bar(stat = "identity", position = "stack") +
+    scale_fill_viridis_d(name = "Sairaala") +
+    labs(title = "COVID-19 potilaita sairaalassa",
+         subtitle = "SecAppiin ilmoitetut luvut",
+         y = "Potilaita",
+         x = "Päivämäärä",
+         caption = "KSSHP 1.4. tiedot puuttuvat") + 
+    theme(line = element_blank(),
+          rect = element_blank(),
+          strip.text.x = element_text(size = 12, colour = "black", face = "bold"),
+          strip.background = element_rect(colour = "black", fill = "white"),
+          plot.caption = element_text(color = "black", face = "italic"))
+```
+
+### Tehohoito
+
+```{r covid19-teholla, echo=F, warning = F, fig.width = 10, fig.height = 5}
+dat %>% 
+  ggplot(aes(x = pvm, y = covid19.tehohoito.ja.tehovalvonta, fill = site.id)) + 
+  geom_bar(stat = "identity", position = "stack") +
+  scale_fill_viridis_d(name = "Sairaala") +
+  labs(title = "COVID-19 potilaita tehohoidossa",
+       subtitle = "SecAppiin ilmoitetut luvut",
+       y = "Potilaita",
+       x = "Päivämäärä",
+       caption = "KSSHP 1.4. tiedot puuttuvat") + 
+  theme(line = element_blank(),
+        rect = element_blank(),
+        strip.text.x = element_text(size = 12, colour = "black", face = "bold"),
+        strip.background = element_rect(colour = "black", fill = "white"),
+        plot.caption = element_text(color = "black", face = "italic"))
+```
