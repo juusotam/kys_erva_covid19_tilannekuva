@@ -5,6 +5,8 @@
 .DS_Store
 *.log
 *.pdf
+*.knit.md
+*.utf8.md
 data/
 output/
 documentation/salainen
