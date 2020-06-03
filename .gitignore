@@ -4,6 +4,7 @@
 .Ruserdata
 .DS_Store
 *.log
+*.pdf
 data/
 output/
 documentation/salainen

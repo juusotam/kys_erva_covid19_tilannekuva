@@ -61,14 +61,14 @@ rownames(d) <- c("Sairaanhoitopiiri",
                  "Kaikki potilaat vuodeosastopaikoilla",
                  "Tehohoito ja tehovalvonta paikat",
                  "Kaikki potilaat tehohoito ja tehovalvonta paikoilla",
-                 #"Kotiutuneet COVID-19 potilaat",
-                 #"Uudet positiiviset COVID-19 testit",
+                 "Kotiutuneet COVID-19 potilaat",
+                 "Uudet positiiviset COVID-19 testit",
                  "Kuolleet COVID-19 potilaat erikoissairaanhoidossa",
                  "Kuolleet COVID-19-potilaat perusterveydenhuollon yksiköissä (vuodeosasto tai muu)",
                  "Kuolleet COVID-19-potilaat sosiaalihuollon ympärivuorokautisissa asumisyksiköissä",
                  "Kuolleet COVID-19-potilaat kotona tai muualla",
-                 #"Kuinka monta COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
-                 #"Kuinka monta EI COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
+                 "Kuinka monta COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
+                 "Kuinka monta EI COVID-19 potilasta voitaisiin ottaa tehohoitoon nyt",
                  "Sairaalahoidossa olevat COVID-19 potilaat yhteensä",
                  "COVID-19 potilaita vuodeosastohoidossa",
                  "COVID-19 potilaite tehohoidossa ja tehovalvontahoidossa",
@@ -77,39 +77,33 @@ rownames(d) <- c("Sairaanhoitopiiri",
                  "Vajetta lääkäreistä",
                  "Vajetta hoitajista",
                  "Vajetta muusta henkilökunnasta",
-                 "Kuinka monta henkilöä sairaanhoitopiirin tartuntataudeista vastaava lääkäri on määrittänyt koronapotilaan lähikontakteiksi (altistuneiksi) (oman sairaanhoitopiirin asukkaat)?",
-                 "Kuinka monta henkilöä sairaanhoitopiirin tartuntataudeista vastaava lääkäri on määrittänyt koronapotilaan lähikontakteiksi (altistuneiksi) (muiden sairaanhoitopiirien asukkaat)?",
-                 "Kuinka monella henkilöllä alkoi seurantaviikon aikana karanteeni (lukumäärä)?",
-                 "Kuinka monella seurantaviikolla todetulla koronatapauksella tartunnanlähde on tiedossa (lukumäärä)?",
-                 "Joukkoaltistuksia seurantaviikolla (lukumäärä)",
-                 "Muuta olennaista tartunnanjäljitykseen (vapaa teksti)"
-                 #"Vaje suojatakeista",
-                 #"Vaje visiireistä",
-                 #"Vaje maskeista",
-                 #"Vaje suojakäsineistä",
-                 #"Vaje käsidesistä",
-                 #"Vaje muista kriittisistä tarvikkeista",
-                 #"Tietotekniikan aiheuttamia toiminnan häiriöitä",
-                 #"Mistä kriittisistä tarvikkeista",
-                 #"Vaje infuusioliuoksista",
-                 #"Vaje verituotteista",
-                 #"Vaje lääkinnällisestä hapesta",
-                 #"Vaje kipulääkkeistä",
-                 #"Vaje sedatiivoista",
-                 #"Vaje verenkierron tukilääkkeistä",
-                 #"Vaje antibiooteista",
-                 #"Vaje muista kriittisistä lääkkeistä",
-                 #"Mistä kriittisistä lääkkeistä"
+                 "Vaje suojatakeista",
+                 "Vaje visiireistä",
+                 "Vaje maskeista",
+                 "Vaje suojakäsineistä",
+                 "Vaje käsidesistä",
+                 "Vaje muista kriittisistä tarvikkeista",
+                 "Tietotekniikan aiheuttamia toiminnan häiriöitä",
+                 "Mistä kriittisistä tarvikkeista",
+                 "Vaje infuusioliuoksista",
+                 "Vaje verituotteista",
+                 "Vaje lääkinnällisestä hapesta",
+                 "Vaje kipulääkkeistä",
+                 "Vaje sedatiivoista",
+                 "Vaje verenkierron tukilääkkeistä",
+                 "Vaje antibiooteista",
+                 "Vaje muista kriittisistä lääkkeistä",
+                 "Mistä kriittisistä lääkkeistä"
     )
 ```
 
 \renewcommand{\arraystretch}{1.5}
 
 ```{r echo = F}
-knitr::kable(d[2:14, ],
+knitr::kable(d[2:18, ],
           format = "latex", booktabs = TRUE) %>%
           kable_styling(latex_options = "scale_down") %>% 
-          row_spec(9, bold = T, color = "white", background = "#D7261E")
+          row_spec(13, bold = T, color = "white", background = "#D7261E")
 ```
 
 ## Henkilökunta
@@ -118,7 +112,7 @@ knitr::kable(d[2:14, ],
 e <- d
 e$muuttuja <- rownames(e)
 
-table_1 <- e[15:17,] %>% 
+table_1 <- e[19:21,] %>% 
   gather(key = "key", value = "measurement", ESSOTE, KSSHP, KYS, SiunSote, Sosteri) 
 
 table_1_captions <- table_1 %>% 
@@ -145,7 +139,47 @@ table_1 %>%
   scale_x_discrete(position = "top")
 ```
 
-\newpage
+## Tarvikkeet ja lääkkeet
+
+```{r tarvikkeet, echo = F, warning = F, fig.width = 10}
+e <- d
+e$muuttuja <- rownames(e)
+
+table_1 <- e[c(22:28, 30:37),] %>% 
+  gather(key = "key", value = "measurement", ESSOTE, KSSHP, KYS, SiunSote, Sosteri) 
+
+table_1_captions <- table_1 %>% 
+  mutate(measurement = ifelse(measurement == 1, "Kyllä", "Ei"))
+
+
+table_1 %>% 
+  ggplot(aes(x = key, y = muuttuja, fill = measurement)) + 
+  geom_tile(aes(fill= measurement), colour = "gray90", size = 1) +
+  scale_fill_manual(values = c("green", "red", "green", "red"), na.value = "white") +
+  geom_text(aes(label = measurement), data = table_1_captions) +
+  theme_minimal()+ 
+  theme(panel.border = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        axis.line = element_blank(),
+        legend.position = "none",
+        axis.text.x = element_text(color = "grey20", size = 12, hjust = .5, vjust = .5, face = "plain"),
+        axis.text.y = element_text(color = "grey20", size = 12, angle = 0, hjust = 1, vjust = 0, face = "plain"),  
+        axis.title.x = element_text(color = "grey20", size = 12, angle = 0, hjust = .5, vjust = 0, face = "plain"),
+        axis.title.y = element_text(color = "grey20", size = 12, angle = 90, hjust = .5, vjust = .5, face = "plain")) +
+  labs(y = NULL,
+       x = NULL)+
+  scale_x_discrete(position = "top")
+```
+
+## Puutteet
+
+```{r echo = F, warning = F}
+knitr::kable(d[c(29,38),],
+          format = "latex", booktabs = TRUE) %>%
+          kable_styling(latex_options = "scale_down")
+```
+
 
 ## Muut huomiot ja toiminnalliset muutokset
 
@@ -155,15 +189,11 @@ table_1 %>%
 
 **Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$toiminnalliset.muutokset)`
 
-**Muuta olennaista tartunnanjäljitykseen:**  `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$muut.huomiot.karanteeni) | tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$muut.huomiot.karanteeni %in% c(".","-", " ", "n/a"), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "ESSOTE"),]$muut.huomiot.karanteeni)`
-
 ### KYS
 
 **Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot)`
 
 **Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$toiminnalliset.muutokset)`
-
-**Muuta olennaista tartunnanjäljitykseen:**  `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot.karanteeni) | tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot.karanteeni %in% c(".","-", " ", "n/a"), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "KYS"),]$muut.huomiot.karanteeni)`
 
 ### KSSHP
 
@@ -171,23 +201,17 @@ table_1 %>%
 
 **Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$toiminnalliset.muutokset)`
 
-**Muuta olennaista tartunnanjäljitykseen:**  `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$muut.huomiot.karanteeni) | tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$muut.huomiot.karanteeni %in% c(".","-", " ", "n/a"), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "KSSHP"),]$muut.huomiot.karanteeni)`
-
 ### SiunSote
 
 **Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot)`
 
 **Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$toiminnalliset.muutokset)`
 
-**Muuta olennaista tartunnanjäljitykseen:**  `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot.karanteeni) | tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot.karanteeni %in% c(".","-", " ", "n/a"), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "SiunSote"),]$muut.huomiot.karanteeni)`
-
 ### Sosteri
 
 **Huomiot:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot) | tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot %in% c(".","-", " "), "Ei huomioita.", tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot)`
 
 **Toiminnalliset muutoset:** `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$toiminnalliset.muutokset) | tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$toiminnalliset.muutokset %in% c(".","-", " "), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$toiminnalliset.muutokset)`
-
-**Muuta olennaista tartunnanjäljitykseen:**  `r ifelse(is.na(tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot.karanteeni) | tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot.karanteeni %in% c(".","-", " ", "n/a"), "Ei muutoksia", tbl[(tbl$pvm == params$date & tbl$site.id == "Sosteri"),]$muut.huomiot.karanteeni)`
 
 \newpage
 
@@ -243,14 +267,6 @@ ageGroups(tbl, date = params$date)
 
 ```{r uudet-covid-19-cum, echo = F, warning = F, fig.width = 10, fig.height = 5}
 ageGroupsCum(tbl)
+
 ```
 
-## Altistuneiden jäljitys
-
-```{r altistuneet, echo = F, warning = F}
-ifelse(weekdays(Sys.Date()) == "Tuesday", 
-       knitr::kable(d[18:22, ],
-          format = "latex", booktabs = TRUE) %>%
-          kable_styling(latex_options = "scale_down"),
-       paste0("Tiedot ilmoitetaan vain tiistaisin."))
-```
